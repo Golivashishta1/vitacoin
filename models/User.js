@@ -126,10 +126,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true 
 });
 
-// Indexes for better performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-userSchema.index({ level: -1, coins: -1 }); // For leaderboards
 
 // Virtual for win rate
 userSchema.virtual('winRate').get(function() {

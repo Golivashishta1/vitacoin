@@ -39,7 +39,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Bolt server is running!' });
 });
 
-import User from "./models/User.js"; // adjust path if needed
+import User from "../models/User.js"; // fixed path
 
 app.get("/test-user", async (req, res) => {
   try {
@@ -77,7 +77,7 @@ app.use('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/vitacoin';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://vashishtagoli:12345678.@cluster0.d9u50.mongodb.net/';
 
 mongoose.connect(MONGO_URI, { 
   useNewUrlParser: true, 

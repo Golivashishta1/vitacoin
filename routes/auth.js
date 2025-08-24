@@ -79,9 +79,11 @@ const sendUserResponse = (user, token, res) => {
 // Signup
 router.post("/signup", validateSignup, async (req, res) => {
   try {
+    console.log('Signup route called');
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Validation errors:', errors.array());
       return res.status(400).json({ 
         message: "Validation failed",
         errors: errors.array()
@@ -89,13 +91,15 @@ router.post("/signup", validateSignup, async (req, res) => {
     }
 
     const { username, email, password } = req.body;
+    console.log('Signup data:', { username, email });
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
       $or: [{ email }, { username }] 
     });
-    
+    console.log('Existing user:', existingUser);
     if (existingUser) {
+      console.log('User already exists:', existingUser.email === email ? 'Email' : 'Username');
       return res.status(400).json({ 
         message: existingUser.email === email 
           ? "Email already registered" 
@@ -106,6 +110,7 @@ router.post("/signup", validateSignup, async (req, res) => {
     // Hash password
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    console.log('Password hashed');
 
     // Create new user
     const user = new User({
@@ -115,16 +120,21 @@ router.post("/signup", validateSignup, async (req, res) => {
       coins: 1000, // Welcome bonus
       lifetimeCoins: 1000
     });
+    console.log('User object created:', user);
 
     await user.save();
+    console.log('User saved to DB');
 
     // Generate token
     const token = generateToken(user._id);
+    console.log('JWT token generated');
 
     // Update login streak
     await user.updateStreak();
+    console.log('Login streak updated');
 
     sendUserResponse(user, token, res);
+    console.log('Signup response sent');
 
   } catch (error) {
     console.error('Signup error:', error);
