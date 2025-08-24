@@ -2,9 +2,10 @@
 const BASE_URL = 'http://localhost:5000/api';
 
 // Test data
+const uniq = Date.now().toString().slice(-6);
 const testUser = {
-  username: 'testuser',
-  email: 'test@example.com',
+  username: `testuser_${uniq}`,
+  email: `test_${uniq}@example.com`,
   password: 'TestPass123'
 };
 
