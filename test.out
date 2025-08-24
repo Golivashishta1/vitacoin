@@ -1,0 +1,185 @@
+🚀 Starting MongoDB API tests...
+
+🔍 Testing health check...
+Health check response: { status: 'OK', message: 'Bolt server is running!' }
+
+📝 Testing user signup...
+Signup response: {
+  status: 200,
+  data: {
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YWFiMTY2YTcyOGMwYWE3NTczMTc2YSIsImlhdCI6MTc1NjAxNjk5OCwiZXhwIjoxNzU2NjIxNzk4fQ.RLGZexZQ7h8SQMtuSPnHkfXyg0es0UPVWHMwb2RZqQs',
+    user: {
+      _id: '68aab166a728c0aa7573176a',
+      username: 'testuser',
+      email: 'test@example.com',
+      avatarUrl: null,
+      level: 1,
+      xp: 0,
+      coins: 1000,
+      lifetimeCoins: 1000,
+      currentStreak: 0,
+      longestStreak: 0,
+      gamesPlayed: 0,
+      gamesWon: 0,
+      tasksCompleted: 0,
+      dailyTasksCompleted: 0,
+      weeklyTasksCompleted: 0,
+      friends: [],
+      notifications: true,
+      theme: 'dark',
+      isVerified: false,
+      createdAt: '2025-08-24T06:29:58.593Z',
+      updatedAt: '2025-08-24T06:29:58.600Z'
+    },
+    message: 'Authentication successful'
+  }
+}
+✅ Signup successful, token received
+
+🔐 Testing user login...
+Login response: {
+  status: 200,
+  data: {
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YWFiMTY2YTcyOGMwYWE3NTczMTc2YSIsImlhdCI6MTc1NjAxNjk5OCwiZXhwIjoxNzU2NjIxNzk4fQ.RLGZexZQ7h8SQMtuSPnHkfXyg0es0UPVWHMwb2RZqQs',
+    user: {
+      _id: '68aab166a728c0aa7573176a',
+      username: 'testuser',
+      email: 'test@example.com',
+      avatarUrl: null,
+      level: 1,
+      xp: 0,
+      coins: 1000,
+      lifetimeCoins: 1000,
+      currentStreak: 0,
+      longestStreak: 0,
+      gamesPlayed: 0,
+      gamesWon: 0,
+      tasksCompleted: 0,
+      dailyTasksCompleted: 0,
+      weeklyTasksCompleted: 0,
+      friends: [],
+      notifications: true,
+      theme: 'dark',
+      isVerified: false,
+      createdAt: '2025-08-24T06:29:58.593Z',
+      updatedAt: '2025-08-24T06:29:58.858Z'
+    },
+    message: 'Authentication successful'
+  }
+}
+✅ Login successful, token received
+
+👤 Testing get user profile...
+Profile response: {
+  status: 200,
+  data: {
+    user: {
+      _id: '68aab166a728c0aa7573176a',
+      username: 'testuser',
+      email: 'test@example.com',
+      avatarUrl: null,
+      level: 1,
+      xp: 0,
+      coins: 1000,
+      lifetimeCoins: 1000,
+      currentStreak: 0,
+      longestStreak: 0,
+      gamesPlayed: 0,
+      gamesWon: 0,
+      totalPlayTime: 0,
+      tasksCompleted: 0,
+      dailyTasksCompleted: 0,
+      weeklyTasksCompleted: 0,
+      friends: [],
+      friendRequests: [],
+      notifications: true,
+      theme: 'dark',
+      isVerified: false,
+      lastLoginDate: '2025-08-24T06:29:58.857Z',
+      createdAt: '2025-08-24T06:29:58.593Z',
+      updatedAt: '2025-08-24T06:29:58.858Z',
+      __v: 0
+    }
+  }
+}
+✅ Profile retrieved successfully
+User data: {
+  _id: '68aab166a728c0aa7573176a',
+  username: 'testuser',
+  email: 'test@example.com',
+  avatarUrl: null,
+  level: 1,
+  xp: 0,
+  coins: 1000,
+  lifetimeCoins: 1000,
+  currentStreak: 0,
+  longestStreak: 0,
+  gamesPlayed: 0,
+  gamesWon: 0,
+  totalPlayTime: 0,
+  tasksCompleted: 0,
+  dailyTasksCompleted: 0,
+  weeklyTasksCompleted: 0,
+  friends: [],
+  friendRequests: [],
+  notifications: true,
+  theme: 'dark',
+  isVerified: false,
+  lastLoginDate: '2025-08-24T06:29:58.857Z',
+  createdAt: '2025-08-24T06:29:58.593Z',
+  updatedAt: '2025-08-24T06:29:58.858Z',
+  __v: 0
+}
+
+📊 Testing get user stats...
+Stats response: {
+  status: 200,
+  data: {
+    stats: {
+      level: 1,
+      xp: 0,
+      coins: 1000,
+      lifetimeCoins: 1000,
+      currentStreak: 0,
+      longestStreak: 0,
+      gamesPlayed: 0,
+      gamesWon: 0,
+      winRate: 0,
+      totalPlayTime: 0,
+      tasksCompleted: 0,
+      dailyTasksCompleted: 0,
+      weeklyTasksCompleted: 0,
+      friendsCount: 0,
+      rank: 1
+    }
+  }
+}
+✅ Stats retrieved successfully
+User stats: {
+  level: 1,
+  xp: 0,
+  coins: 1000,
+  lifetimeCoins: 1000,
+  currentStreak: 0,
+  longestStreak: 0,
+  gamesPlayed: 0,
+  gamesWon: 0,
+  winRate: 0,
+  totalPlayTime: 0,
+  tasksCompleted: 0,
+  dailyTasksCompleted: 0,
+  weeklyTasksCompleted: 0,
+  friendsCount: 0,
+  rank: 1
+}
+
+📋 Test Summary:
+================
+✅ Health Check
+✅ User Signup
+✅ User Login
+✅ Get User Profile
+✅ Get User Stats
+
+🎯 Results: 5/5 tests passed
+🎉 All tests passed! MongoDB and API are working correctly.
