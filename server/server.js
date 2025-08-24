@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 import authRoutes from "../routes/auth.js";
 import userRoutes from "../routes/user.js";
@@ -72,25 +73,53 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://vashishtagoli:12345678.@cluster0.d9u50.mongodb.net/';
+const ENV_MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
-.then(() => {
-  console.log('✅ Connected to MongoDB');
-  app.listen(PORT, () => {
-    console.log(`🚀 Bolt server running on port ${PORT}`);
-    console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
-  });
-})
-.catch(err => {
-  console.error("❌ MongoDB connection error:", err);
-  process.exit(1);
-});
+async function startServer() {
+  try {
+    let mongoUriToUse = ENV_MONGO_URI;
+
+    if (!mongoUriToUse) {
+      console.log("ℹ️  MONGO_URI not set. Starting in-memory MongoDB...");
+      const mem = await MongoMemoryServer.create();
+      mongoUriToUse = mem.getUri();
+      console.log("✅ In-memory MongoDB started");
+    }
+
+    await mongoose.connect(mongoUriToUse, {});
+    console.log('✅ Connected to MongoDB');
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Bolt server running on port ${PORT}`);
+      console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+    });
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    // Try fallback if not already attempted
+    if (ENV_MONGO_URI) {
+      try {
+        console.log("🧪 Retrying with in-memory MongoDB fallback...");
+        const mem = await MongoMemoryServer.create();
+        const fallbackUri = mem.getUri();
+        await mongoose.connect(fallbackUri, {});
+        console.log('✅ Connected to in-memory MongoDB');
+        app.listen(PORT, () => {
+          console.log(`🚀 Bolt server running on port ${PORT}`);
+          console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+        });
+      } catch (fallbackErr) {
+        console.error("❌ Fallback in-memory MongoDB failed:", fallbackErr);
+        process.exit(1);
+      }
+    } else {
+      process.exit(1);
+    }
+  }
+}
+
+startServer();
