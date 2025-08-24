@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import cookieParser from "cookie-parser";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 import authRoutes from "../routes/auth.js";
@@ -17,6 +18,7 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+app.use(cookieParser());
 
 // Rate limiting
 const limiter = rateLimit({

@@ -39,7 +39,7 @@ const generateToken = (userId) => {
   return jwt.sign(
     { id: userId },
     process.env.JWT_SECRET || 'your-secret-key',
-    { expiresIn: '7d' }
+    { expiresIn: '1d' }
   );
 };
 
@@ -129,6 +129,15 @@ router.post("/signup", validateSignup, async (req, res) => {
     const token = generateToken(user._id);
     console.log('JWT token generated');
 
+    // Set HTTP-only cookie (1 day)
+    res.cookie('bolt_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+
     // Update login streak
     await user.updateStreak();
     console.log('Login streak updated');
@@ -178,6 +187,15 @@ router.post("/login", validateLogin, async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
 
+    // Set HTTP-only cookie (1 day)
+    res.cookie('bolt_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+
     // Update login streak
     await user.updateStreak();
 
@@ -192,10 +210,17 @@ router.post("/login", validateLogin, async (req, res) => {
   }
 });
 
+// Helper to get token from cookie or header
+const getTokenFromRequest = (req) => {
+  const cookieToken = req.cookies?.bolt_token;
+  if (cookieToken) return cookieToken;
+  return req.headers.authorization?.split(' ')[1];
+};
+
 // Get current user (protected route)
 router.get("/me", async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = getTokenFromRequest(req);
     
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -229,7 +254,7 @@ router.get("/me", async (req, res) => {
 // Refresh token
 router.post("/refresh", async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = getTokenFromRequest(req);
     
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -244,6 +269,15 @@ router.post("/refresh", async (req, res) => {
 
     // Generate new token
     const newToken = generateToken(user._id);
+
+    // Update cookie
+    res.cookie('bolt_token', newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+    });
 
     sendUserResponse(user, newToken, res);
 
@@ -263,8 +297,14 @@ router.post("/refresh", async (req, res) => {
   }
 });
 
-// Logout (client-side token removal)
+// Logout: clear cookie
 router.post("/logout", (req, res) => {
+  res.clearCookie('bolt_token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  });
   res.json({ message: "Logged out successfully" });
 });
 
